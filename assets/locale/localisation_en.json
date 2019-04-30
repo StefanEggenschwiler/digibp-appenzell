@@ -4,7 +4,8 @@
   "tab_main": "Main",
   "tab_about": "About",
   "tab_lang": "Change Language",
-  "tab_registration": "Application Registration",
-  "tab_status": "Application Status",
+  "tab_application": "Application",
+  "tab_registration": "New Registration",
+  "tab_status": "Retrieve Status",
   "txt_about": "Heydiho! Welcome to the about page! \t(^˵◕ω◕˵^)"
 }

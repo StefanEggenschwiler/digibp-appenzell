@@ -1,4 +1,7 @@
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
+import 'package:digibp_appenzell/src/ui/home.dart';
+import 'package:digibp_appenzell/src/ui/registration.dart';
+import 'package:digibp_appenzell/src/ui/status.dart';
 import 'package:flutter/material.dart';
 import '../application.dart';
 
@@ -18,11 +21,8 @@ class NavDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text(
-              AppTranslations.of(context).text('app_name'),
-              style: TextStyle(color: Colors.white),
-            ),
-            decoration: BoxDecoration(color: Colors.blueAccent),
+            child: Image.asset('assets/images/rav.png'),
+            decoration: BoxDecoration(color: Colors.red[500]),
           ),
           ListTile(
             leading: Icon(Icons.home),
@@ -30,26 +30,37 @@ class NavDrawer extends StatelessWidget {
             enabled: _widgetName == AppTranslations.of(context).text('tab_main') ? false : true,
             onTap: () {
               Navigator.pop(context);
-              Navigator.pop(context);
-            },
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return Home();
+              }));            },
           ),
-          ListTile(
-            leading: Icon(Icons.monetization_on),
-            title: Text(AppTranslations.of(context).text('tab_registration')),
-            enabled: _widgetName == AppTranslations.of(context).text('tab_registration') ? false : true,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.announcement),
-            title: Text(AppTranslations.of(context).text('tab_status')),
-            enabled: _widgetName == AppTranslations.of(context).text('tab_status') ? false : true,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
+          ExpansionTile(
+            leading: Icon(Icons.account_balance),
+            title: Text(AppTranslations.of(context).text('tab_application')),
+            children: <Widget>[
+              ListTile(
+                leading: Text(''),
+                title: Text(AppTranslations.of(context).text('tab_registration')),
+                enabled: _widgetName == AppTranslations.of(context).text('tab_registration') ? false : true,
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    return Registration();
+                  }));
+                },
+              ),
+              ListTile(
+                leading: Text(''),
+                title: Text(AppTranslations.of(context).text('tab_status')),
+                enabled: _widgetName == AppTranslations.of(context).text('tab_status') ? false : true,
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    return RetrieveStatus();
+                  }));
+                },
+              )
+            ]
           ),
           ListTile(
             leading: Icon(Icons.info),
@@ -72,7 +83,7 @@ class NavDrawer extends StatelessWidget {
                 changeLanguage(data);
                 },
             )).toList(),
-          )
+          ),
         ],
       ),
     );

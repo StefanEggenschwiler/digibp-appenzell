@@ -2,14 +2,14 @@ import 'package:digibp_appenzell/src/localisation/app_translation.dart';
 import 'package:digibp_appenzell/src/ui/nav_drawer.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
+class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return HomePageState();
+    return HomeState();
   }
 }
 
-class HomePageState extends State<HomePage> {
+class HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
