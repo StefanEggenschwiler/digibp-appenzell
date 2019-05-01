@@ -1,5 +1,5 @@
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
-import 'package:digibp_appenzell/src/ui/select_employer.dart';
+import 'package:digibp_appenzell/src/ui/registration_three.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -41,18 +41,6 @@ class RegistrationState extends State<RegistrationTwo> {
   String _email;
   String _phone;
 
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: _birthDate,
-        firstDate: DateTime(1950, 1),
-        lastDate: DateTime(2002));
-    if (picked != null && picked != _birthDate)
-      setState(() {
-        _birthDate = picked;
-      });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +63,7 @@ class RegistrationState extends State<RegistrationTwo> {
         Container(
           margin: EdgeInsets.only(top: 10),
           child: Stepper(
+            physics: ClampingScrollPhysics(),
             type: StepperType.vertical,
             currentStep: _currentStep,
             controlsBuilder:
@@ -85,28 +74,11 @@ class RegistrationState extends State<RegistrationTwo> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    _currentStep == 1
-                        ?
                     RaisedButton.icon(
                       icon: Icon(Icons.navigate_next),
-                      onPressed: onStepContinue,
+                      onPressed: _validateInputs,
                       label: Text(AppTranslations.of(context).text('txt_next')),
                     )
-                        :
-                    RaisedButton.icon(
-                      icon: Icon(Icons.save_alt),
-                      onPressed: _validateInputs,
-                      label: Text(AppTranslations.of(context).text('txt_submit')),
-                    ),
-                    _currentStep > 1 // this is the last step
-                        ?
-                    FlatButton.icon(
-                      icon: Icon(Icons.arrow_back),
-                      label: Text(AppTranslations.of(context).text('txt_cancel')),
-                      onPressed: onStepCancel,
-                    )
-                        :
-                    Container(width: 0, height: 0,),
                   ],
                 ),
               );
@@ -269,9 +241,23 @@ class RegistrationState extends State<RegistrationTwo> {
               ),
               new Step(
                 title: Text(AppTranslations.of(context).text('txt_step3')),
-                content: Text(''),
+                content: ListTile(),
                 isActive: false,
-                state: StepState.editing,
+                state: StepState.disabled,
+                subtitle: Text(AppTranslations.of(context).text('txt_case_information')),
+              ),
+              new Step(
+                title: Text(AppTranslations.of(context).text('txt_step4')),
+                content: ListTile(),
+                isActive: false,
+                state: StepState.disabled,
+                subtitle: Text(AppTranslations.of(context).text('txt_face_captcha')),
+              ),
+              new Step(
+                title: Text(AppTranslations.of(context).text('txt_step5')),
+                content: ListTile(),
+                isActive: false,
+                state: StepState.disabled,
                 subtitle: Text(AppTranslations.of(context).text('txt_finalise_submission')),
               ),
             ],
@@ -359,10 +345,8 @@ class RegistrationState extends State<RegistrationTwo> {
           timeInSecForIos: 1,
           backgroundColor: Colors.grey,
           textColor: Colors.white);
-      Navigator.pop(context);
-      Navigator.pop(context);
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return EmployerSelection();
+        return RegistrationThree();
       }));
     } else {
       // If all data are not valid then start auto validation.

@@ -76,7 +76,39 @@ class RegistrationState extends State<RegistrationOne> {
                 isActive: true,
                 state: StepState.editing,
                 subtitle: Text(AppTranslations.of(context).text('txt_ssn_enter')),
-              )],
+              ),
+              new Step(
+                title: Text(AppTranslations.of(context).text('txt_step2')),
+                content: Text(''),
+                isActive: false,
+                state: StepState.disabled,
+                subtitle: Text(AppTranslations.of(context).text('txt_personal_information')),
+              ),
+              new Step(
+                title: Text(AppTranslations.of(context).text('txt_step3')),
+                content: Text(''),
+                isActive: false,
+                state: StepState.disabled,
+                subtitle: Text(AppTranslations.of(context).text('txt_case_information')),
+              ),
+              new Step(
+                // Title of the Step
+                title: Text(AppTranslations.of(context).text('txt_step4')),
+                // Content, it can be any widget here. Using basic Text for this example
+                content: ListTile(),
+                isActive: false,
+                state: StepState.disabled,
+                subtitle: Text(AppTranslations.of(context).text('txt_face_captcha')),
+              ),
+              new Step(
+                // Title of the Step
+                title: Text(AppTranslations.of(context).text('txt_step5')),
+                // Content, it can be any widget here. Using basic Text for this example
+                content: ListTile(),
+                isActive: false,
+                state: StepState.disabled,
+                subtitle: Text(AppTranslations.of(context).text('txt_finalise_submission')),
+              ),],
             onStepContinue: () {
               setState(() {
                 // update the variable handling the current step value
