@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:digibp_appenzell/src/application.dart';
+import 'package:digibp_appenzell/src/app.dart';
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
 import 'package:flutter/material.dart';
 

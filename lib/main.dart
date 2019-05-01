@@ -1,4 +1,4 @@
-import 'package:digibp_appenzell/src/application.dart';
+import 'package:digibp_appenzell/src/app.dart';
 import 'package:digibp_appenzell/src/localisation/app_translations_delegate.dart';
 import 'package:digibp_appenzell/src/ui/home.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +30,8 @@ class _AppState extends State<App> {
       theme: ThemeData(
         // Define the default Brightness and Colors
         brightness: Brightness.light,
-        primaryColor: Colors.red[500],
-        accentColor: Colors.red[500],
+        primaryColor: Color(0xFFFF0000),
+        accentColor: Color(0xFFFF0000),
 
         // Define the default Font Family
         fontFamily: 'RobotoMono',

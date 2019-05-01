@@ -27,6 +27,10 @@ dependencies:
   cupertino_icons: ^0.1.2
   rxdart: ^0.18.0
   http: ^0.12.0+2
+  email_validator: ^1.0.0
+  fluttertoast: ^3.0.4
+  datetime_picker_formfield: ^0.1.8
+  firebase_ml_vision: ^0.7.0+2
 
 dev_dependencies:
   flutter_test:

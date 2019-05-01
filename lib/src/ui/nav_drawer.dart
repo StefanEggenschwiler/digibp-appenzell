@@ -1,9 +1,9 @@
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
 import 'package:digibp_appenzell/src/ui/home.dart';
-import 'package:digibp_appenzell/src/ui/registration.dart';
+import 'package:digibp_appenzell/src/ui/registration_one.dart';
 import 'package:digibp_appenzell/src/ui/status.dart';
 import 'package:flutter/material.dart';
-import '../application.dart';
+import '../app.dart';
 
 import 'about.dart';
 
@@ -22,7 +22,7 @@ class NavDrawer extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             child: Image.asset('assets/images/rav.png'),
-            decoration: BoxDecoration(color: Colors.red[500]),
+            decoration: BoxDecoration(color: Color(0xFFFF0000)),
           ),
           ListTile(
             leading: Icon(Icons.home),
@@ -45,7 +45,7 @@ class NavDrawer extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                    return Registration();
+                    return RegistrationOne();
                   }));
                 },
               ),
