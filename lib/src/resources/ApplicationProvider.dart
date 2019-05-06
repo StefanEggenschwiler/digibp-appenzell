@@ -1,6 +1,6 @@
-import 'package:digibp_appenzell/src/model/AppStatusModel.dart';
-import 'package:digibp_appenzell/src/model/ApplicationModel.dart';
-import 'package:digibp_appenzell/src/model/EmployerModel.dart';
+import 'package:digibp_appenzell/src/models/AppStatusModel.dart';
+import 'package:digibp_appenzell/src/models/ApplicationModel.dart';
+import 'package:digibp_appenzell/src/models/EmployerModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:core';
 import 'package:flutter/material.dart';
@@ -16,9 +16,19 @@ class ApplicationProvider {
 
   static final ApplicationProvider api = ApplicationProvider._();
 
-  insert(Application application) {}
+  insert(Application application) {
+    http.post(caseWebHook, body: applicationToJson(application))
+        .then((onResponse) {
+          debugPrint('Insert: $onResponse');
+    });
+  }
 
-  update(Application application) {}
+  update(Application application) {
+    http.post(caseWebHook, body: applicationToJson(application))
+        .then((onResponse) {
+      debugPrint('Update: $onResponse');
+    });
+  }
 
   Future<AppStatus> getStatus(int applicationId) async {
     var response = await http.get(caseWebHook);
@@ -29,9 +39,7 @@ class ApplicationProvider {
   Future<List<Employer>> getAllEmployers() async {
     var response = await http.get(employersWebHook);
     debugPrint('${response.body}');
-
     final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-
     return parsed.map<Employer>((json) => Employer.fromMap(json)).toList();
   }
 

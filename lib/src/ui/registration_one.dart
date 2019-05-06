@@ -1,5 +1,5 @@
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
-import 'package:digibp_appenzell/src/model/ApplicationModel.dart';
+import 'package:digibp_appenzell/src/models/ApplicationModel.dart';
 import 'package:digibp_appenzell/src/ui/registration_two.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';

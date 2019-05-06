@@ -1,7 +1,7 @@
 import 'package:digibp_appenzell/src/blocs/EmployerListBloc.dart';
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
-import 'package:digibp_appenzell/src/model/ApplicationModel.dart';
-import 'package:digibp_appenzell/src/model/EmployerModel.dart';
+import 'package:digibp_appenzell/src/models/ApplicationModel.dart';
+import 'package:digibp_appenzell/src/models/EmployerModel.dart';
 import 'package:digibp_appenzell/src/ui/registration_four.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -179,7 +179,6 @@ class RegistrationState extends State<RegistrationThree> {
                   _selected = value;
                 });
               },
-
             );
           } else {
             return Center(child: CircularProgressIndicator());

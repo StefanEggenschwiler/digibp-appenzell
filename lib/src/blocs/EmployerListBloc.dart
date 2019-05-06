@@ -1,4 +1,4 @@
-import 'package:digibp_appenzell/src/model/EmployerModel.dart';
+import 'package:digibp_appenzell/src/models/EmployerModel.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:digibp_appenzell/src/resources/ApplicationRepository.dart';
 import 'package:flutter/material.dart';

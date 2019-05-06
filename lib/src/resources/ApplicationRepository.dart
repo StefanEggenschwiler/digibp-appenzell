@@ -1,6 +1,6 @@
-import 'package:digibp_appenzell/src/model/AppStatusModel.dart';
-import 'package:digibp_appenzell/src/model/ApplicationModel.dart';
-import 'package:digibp_appenzell/src/model/EmployerModel.dart';
+import 'package:digibp_appenzell/src/models/AppStatusModel.dart';
+import 'package:digibp_appenzell/src/models/ApplicationModel.dart';
+import 'package:digibp_appenzell/src/models/EmployerModel.dart';
 import 'package:digibp_appenzell/src/resources/ApplicationProvider.dart';
 
 class ApplicationRepository {
