@@ -2,7 +2,7 @@ import 'dart:convert';
 
 Application applicationFromJson(String str) {
   final jsonData = json.decode(str);
-  return Application.fromMap(jsonData, null);
+  return Application.fromMap(jsonData);
 }
 
 String applicationToJson(Application data) {
@@ -17,14 +17,14 @@ class Application {
   String firstName;
   String lastName;
   DateTime birthDate;
-  String ssn;
+  String ahv;
   String address;
   int zipCode;
   String city;
   String country;
   String phone;
 
-  Application({id, employerId, email, phone, firstName, lastName, birthDate, ssn, address, zipCode, city, country}) :
+  Application({id, employerId, email, phone, firstName, lastName, birthDate, ahv, address, zipCode, city, country}) :
         id = id,
         employerId = employerId,
         email = email,
@@ -32,7 +32,7 @@ class Application {
         firstName = firstName,
         lastName = lastName,
         birthDate = birthDate,
-        ssn = ssn,
+        ahv = ahv,
         address = address,
         zipCode = zipCode,
         city = city,
@@ -42,13 +42,14 @@ class Application {
 
   Map<String, dynamic> toMap() {
     return {
+      'id' : id,
       'employerId' : employerId,
       'email' : email,
       'phone' : phone,
       'firstName' : firstName,
       'lastName' : lastName,
-      'birthDate' : birthDate,
-      'ssn' : ssn,
+      'birthDate' : birthDate.toIso8601String(),
+      'ahv' : ahv,
       'address' : address,
       'zipCode' : zipCode,
       'city' : city,
@@ -56,15 +57,14 @@ class Application {
     };
   }
 
-  factory Application.fromMap(K, Map<dynamic, dynamic> V) => new Application(
-      id: K.toString(),
-      employerId: V['employerId'],
+  factory Application.fromMap(Map<dynamic, dynamic> V) => new Application(
+      id: V['id'],
       email: V['email'],
       phone: V['phone'],
       firstName: V['firstName'],
       lastName: V['lastName'],
-      birthDate: V['birtchDate'],
-      ssn: V['ssn'],
+      birthDate: DateTime.parse(V['birthdate']),
+      ahv: V['ahv'],
       address: V['address'],
       zipCode: V['zipCode'],
       city: V['city'],
@@ -73,6 +73,6 @@ class Application {
 
   @override
   String toString() {
-    return 'Application{id: $id, employerId: $employerId, email: $email, phone: $phone, firstName: $firstName, lastName: $lastName, birthDate: $birthDate, ssn: $ssn, address: $address, zipCode: $zipCode, city: $city, country: $country}';
+    return 'Application{id: $id, employerId: $employerId, email: $email, phone: $phone, firstName: $firstName, lastName: $lastName, birthDate: $birthDate, ahv: $ahv, address: $address, zipCode: $zipCode, city: $city, country: $country}';
   }
 }

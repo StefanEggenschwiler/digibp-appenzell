@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-Employer appStatusFromJson(String str) {
+Employer employerFromJson(String str) {
   final jsonData = json.decode(str);
-  return Employer.fromMap(jsonData, null);
+  return Employer.fromMap(jsonData);
 }
 
-String appStatusToJson(Employer data) {
+String employerToJson(Employer data) {
   final dyn = data.toMap();
   return json.encode(dyn);
 }
@@ -13,22 +13,31 @@ String appStatusToJson(Employer data) {
 class Employer {
   int id;
   String name;
+  String email;
 
-  Employer({id, status}) :
+  Employer({id, name, email}) :
         id = id,
-        name = status
+        name = name,
+        email = email
   ;
 
 
   Map<String, dynamic> toMap() {
     return {
       'id' : id,
-      'name' : name
+      'name' : name,
+      'email' : email
     };
   }
 
-  factory Employer.fromMap(K, Map<dynamic, dynamic> V) => new Employer(
-      id: K.toString(),
-      status: V['name']
+  factory Employer.fromMap(Map<dynamic, dynamic> V) => new Employer(
+      id: V['id'],
+      name: V['name'],
+      email: V['email']
   );
+
+  @override
+  String toString() {
+    return 'Employer{id: $id, name: $name, email: $email}';
+  }
 }

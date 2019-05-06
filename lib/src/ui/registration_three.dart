@@ -1,13 +1,10 @@
+import 'package:digibp_appenzell/src/blocs/EmployerListBloc.dart';
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
 import 'package:digibp_appenzell/src/model/ApplicationModel.dart';
+import 'package:digibp_appenzell/src/model/EmployerModel.dart';
 import 'package:digibp_appenzell/src/ui/registration_four.dart';
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:core';
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
-
-
 
 class RegistrationThree extends StatefulWidget {
   Application _application;
@@ -26,19 +23,22 @@ class RegistrationState extends State<RegistrationThree> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   Application _application;
-
-  String _firstName;
-  String _lastName;
-  DateTime _birthDate;
-  String _address;
-  int _zipCode;
-  String _city;
-  String _country;
-  String _email;
-  String _phone;
+  Employer _selected;
 
   RegistrationState(Application application) {
     _application = application;
+  }
+
+  @override
+  void initState() {
+    bloc.getAllEmployers();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    //bloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,7 +55,7 @@ class RegistrationState extends State<RegistrationThree> {
             )));
   }
 
-  var _currentStep = 1;
+  var _currentStep = 2;
 
   Widget formUI() {
     return new Column(
@@ -74,28 +74,16 @@ class RegistrationState extends State<RegistrationThree> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    _currentStep == 1
-                        ?
                     RaisedButton.icon(
                       icon: Icon(Icons.navigate_next),
-                      onPressed: onStepContinue,
                       label: Text(AppTranslations.of(context).text('txt_next')),
-                    )
-                        :
-                    RaisedButton.icon(
-                      icon: Icon(Icons.save_alt),
                       onPressed: _validateInputs,
-                      label: Text(AppTranslations.of(context).text('txt_submit')),
                     ),
-                    _currentStep > 1 // this is the last step
-                        ?
                     FlatButton.icon(
-                      icon: Icon(Icons.arrow_back),
+                      icon: Icon(Icons.navigate_before),
                       label: Text(AppTranslations.of(context).text('txt_cancel')),
                       onPressed: onStepCancel,
-                    )
-                        :
-                    Container(width: 0, height: 0,),
+                    ),
                   ],
                 ),
               );
@@ -121,10 +109,8 @@ class RegistrationState extends State<RegistrationThree> {
               ),
               new Step(
                 title: Text(AppTranslations.of(context).text('txt_step3')),
-                content: ListTile(
-
-                ),
-                isActive: false,
+                content: buildAutoTextView(),
+                isActive: true,
                 state: StepState.editing,
                 subtitle: Text(AppTranslations.of(context).text('txt_case_information')),
               ),
@@ -174,61 +160,42 @@ class RegistrationState extends State<RegistrationThree> {
     );
   }
 
-  void _fieldFocusChange(context, FocusNode currentFocus, FocusNode nextFocus) {
-    currentFocus.unfocus();
-    FocusScope.of(context).requestFocus(nextFocus);
-  }
+  buildAutoTextView() {
+    return StreamBuilder(
+        stream: bloc.allEmployers,
+        builder: (BuildContext context, AsyncSnapshot<List<Employer>> snapshot) {
+          if (snapshot.hasData) {
+            return new DropdownButton<Employer>(
+              value: _selected,
+              items: snapshot.data.map<DropdownMenuItem<Employer>>((Employer value) {
+                return DropdownMenuItem<Employer>(
+                  value: value,
+                  child: Text(value.name),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  debugPrint('$value');
+                  _selected = value;
+                });
+              },
 
-  String validateEmpty(String value) {
-    if (value.isEmpty)
-      return AppTranslations.of(context).text('txt_text_error');
-    else
-      return null;
-  }
-
-  String validateZipCode(String value) {
-    if (num.tryParse(value) == null)
-      return AppTranslations.of(context).text('txt_zip_code_error');
-    else
-      return null;
-  }
-
-  String validateCity(String value) {
-    return null;
-  }
-
-  String validateBirthDate(DateTime value) {
-    return null;
-  }
-
-  String validateCountry(String value) {
-    return null;
-  }
-
-  String validatePhone(String value) {}
-
-  String validateEmail(String value) {
-    if (!EmailValidator.validate(value))
-      return AppTranslations.of(context).text('txt_email_error');
-    else
-      return null;
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+    );
   }
 
   void _validateInputs() {
-    if (_formKey.currentState.validate()) {
+    if (_selected != null) {
       // If all data are correct then save data to out variables
       _formKey.currentState.save();
-      debugPrint('Validation OK');
-      debugPrint('$_firstName - $_lastName - $_birthDate - $_address - $_zipCode - $_city - $_country - $_email - $_phone');
-      Fluttertoast.showToast(
-          msg: AppTranslations.of(context).text('txt_case_submitted'),
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white);
+      _application.employerId = _selected.id;
+      debugPrint('Validation OK: $_application');
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return RegistrationFour();
+        return RegistrationFour(_application);
       }));
     } else {
       // If all data are not valid then start auto validation.

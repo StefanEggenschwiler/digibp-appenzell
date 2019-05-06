@@ -2,7 +2,7 @@ import 'dart:convert';
 
 AppStatus appStatusFromJson(String str) {
   final jsonData = json.decode(str);
-  return AppStatus.fromMap(jsonData, null);
+  return AppStatus.fromMap(jsonData);
 }
 
 String appStatusToJson(AppStatus data) {
@@ -26,8 +26,8 @@ class AppStatus {
     };
   }
 
-  factory AppStatus.fromMap(K, Map<dynamic, dynamic> V) => new AppStatus(
-      id: K.toString(),
+  factory AppStatus.fromMap(Map<dynamic, dynamic> V) => new AppStatus(
+      id: V['id'],
       status: V['status']
   );
 }

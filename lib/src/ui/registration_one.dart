@@ -164,7 +164,7 @@ class RegistrationState extends State<RegistrationOne> {
     if (_formKey.currentState.validate()) {
       // If all data are correct then save data to out variables
       _formKey.currentState.save();
-      _application.ssn = _ssn;
+      _application.ahv = _ssn;
       debugPrint('Validation : $_application');
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return RegistrationTwo(_application);
