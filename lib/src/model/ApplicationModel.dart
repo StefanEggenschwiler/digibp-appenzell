@@ -11,7 +11,8 @@ String applicationToJson(Application data) {
 }
 
 class Application {
-  String id;
+  int id;
+  int employerId;
   String email;
   String firstName;
   String lastName;
@@ -21,10 +22,13 @@ class Application {
   int zipCode;
   String city;
   String country;
+  String phone;
 
-  Application({id, email, firstName, lastName, birthDate, ssn, address, zipCode, city, country}) :
+  Application({id, employerId, email, phone, firstName, lastName, birthDate, ssn, address, zipCode, city, country}) :
         id = id,
+        employerId = employerId,
         email = email,
+        phone = phone,
         firstName = firstName,
         lastName = lastName,
         birthDate = birthDate,
@@ -38,7 +42,9 @@ class Application {
 
   Map<String, dynamic> toMap() {
     return {
+      'employerId' : employerId,
       'email' : email,
+      'phone' : phone,
       'firstName' : firstName,
       'lastName' : lastName,
       'birthDate' : birthDate,
@@ -52,7 +58,9 @@ class Application {
 
   factory Application.fromMap(K, Map<dynamic, dynamic> V) => new Application(
       id: K.toString(),
+      employerId: V['employerId'],
       email: V['email'],
+      phone: V['phone'],
       firstName: V['firstName'],
       lastName: V['lastName'],
       birthDate: V['birtchDate'],
@@ -62,4 +70,9 @@ class Application {
       city: V['city'],
       country: V['country']
   );
+
+  @override
+  String toString() {
+    return 'Application{id: $id, employerId: $employerId, email: $email, phone: $phone, firstName: $firstName, lastName: $lastName, birthDate: $birthDate, ssn: $ssn, address: $address, zipCode: $zipCode, city: $city, country: $country}';
+  }
 }

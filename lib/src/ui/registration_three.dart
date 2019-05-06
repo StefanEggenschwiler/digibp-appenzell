@@ -1,32 +1,31 @@
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
+import 'package:digibp_appenzell/src/model/ApplicationModel.dart';
 import 'package:digibp_appenzell/src/ui/registration_four.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:core';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+
 
 
 class RegistrationThree extends StatefulWidget {
+  Application _application;
+
+  RegistrationThree(Application application) {
+    _application = application;
+  }
+
   @override
   State<StatefulWidget> createState() {
-    return RegistrationState();
+    return RegistrationState(_application);
   }
 }
 
 class RegistrationState extends State<RegistrationThree> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
-
-  final FocusNode _firstNameFocus = FocusNode();
-  final FocusNode _lastNameFocus = FocusNode();
-  final FocusNode _birthDateFocus = FocusNode();
-  final FocusNode _addressFocus = FocusNode();
-  final FocusNode _zipCodeFocus = FocusNode();
-  final FocusNode _cityFocus = FocusNode();
-  final FocusNode _countryFocus = FocusNode();
-  final FocusNode _emailFocus = FocusNode();
-  final FocusNode _phoneFocus = FocusNode();
-
+  Application _application;
 
   String _firstName;
   String _lastName;
@@ -37,6 +36,10 @@ class RegistrationState extends State<RegistrationThree> {
   String _country;
   String _email;
   String _phone;
+
+  RegistrationState(Application application) {
+    _application = application;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +121,9 @@ class RegistrationState extends State<RegistrationThree> {
               ),
               new Step(
                 title: Text(AppTranslations.of(context).text('txt_step3')),
-                content: ListTile(),
+                content: ListTile(
+
+                ),
                 isActive: false,
                 state: StepState.editing,
                 subtitle: Text(AppTranslations.of(context).text('txt_case_information')),

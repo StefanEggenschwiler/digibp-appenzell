@@ -1,4 +1,5 @@
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
+import 'package:digibp_appenzell/src/model/ApplicationModel.dart';
 import 'package:digibp_appenzell/src/ui/registration_two.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -13,9 +14,11 @@ class RegistrationOne extends StatefulWidget {
 class RegistrationState extends State<RegistrationOne> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
+  Application _application;
 
   @override
   Widget build(BuildContext context) {
+    _application = new Application();
     return Scaffold(
         appBar: AppBar(
           title: Text(AppTranslations.of(context).text('tab_registration')),
@@ -161,9 +164,10 @@ class RegistrationState extends State<RegistrationOne> {
     if (_formKey.currentState.validate()) {
       // If all data are correct then save data to out variables
       _formKey.currentState.save();
-      debugPrint('Validation : $_ssn');
+      _application.ssn = _ssn;
+      debugPrint('Validation : $_application');
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return RegistrationTwo();
+        return RegistrationTwo(_application);
       }));
     } else {
       // If all data are not valid then start auto validation.

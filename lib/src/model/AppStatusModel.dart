@@ -11,7 +11,7 @@ String appStatusToJson(AppStatus data) {
 }
 
 class AppStatus {
-  String id;
+  int id;
   String status;
 
   AppStatus({id, status}) :

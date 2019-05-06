@@ -1,4 +1,5 @@
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
+import 'package:digibp_appenzell/src/model/ApplicationModel.dart';
 import 'package:digibp_appenzell/src/ui/registration_three.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -10,15 +11,23 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
 class RegistrationTwo extends StatefulWidget {
+
+  Application _application;
+
+  RegistrationTwo(Application application) {
+    _application = application;
+  }
+
   @override
   State<StatefulWidget> createState() {
-    return RegistrationState();
+    return RegistrationState(_application);
   }
 }
 
 class RegistrationState extends State<RegistrationTwo> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
+  Application _application;
 
   final FocusNode _firstNameFocus = FocusNode();
   final FocusNode _lastNameFocus = FocusNode();
@@ -40,6 +49,10 @@ class RegistrationState extends State<RegistrationTwo> {
   String _country;
   String _email;
   String _phone;
+
+  RegistrationState(Application application) {
+    _application = application;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +240,7 @@ class RegistrationState extends State<RegistrationTwo> {
                           keyboardType: TextInputType.phone,
                           focusNode: _phoneFocus,
                           textInputAction: TextInputAction.done,
-                          validator: validateEmpty,
+                          validator: validatePhone,
                           onSaved: (String val) {
                             _phone = val;
                           },
@@ -323,7 +336,9 @@ class RegistrationState extends State<RegistrationTwo> {
     return null;
   }
 
-  String validatePhone(String value) {}
+  String validatePhone(String value) {
+    return null;
+  }
 
   String validateEmail(String value) {
     if (!EmailValidator.validate(value))
@@ -336,8 +351,15 @@ class RegistrationState extends State<RegistrationTwo> {
     if (_formKey.currentState.validate()) {
       // If all data are correct then save data to out variables
       _formKey.currentState.save();
-      debugPrint('Validation OK');
-      debugPrint('$_firstName - $_lastName - $_birthDate - $_address - $_zipCode - $_city - $_country - $_email - $_phone');
+      _application.firstName = _firstName;
+      _application.lastName = _lastName;
+      _application.birthDate = _birthDate;
+      _application.address = _address;
+      _application.zipCode = _zipCode;
+      _application.city = _city;
+      _application.country = _country;
+      _application.email = _email;
+      _application.phone = _phone;
       Fluttertoast.showToast(
           msg: AppTranslations.of(context).text('txt_case_submitted'),
           toastLength: Toast.LENGTH_LONG,
@@ -345,8 +367,9 @@ class RegistrationState extends State<RegistrationTwo> {
           timeInSecForIos: 1,
           backgroundColor: Colors.grey,
           textColor: Colors.white);
+      debugPrint('Validation : $_application');
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return RegistrationThree();
+        return RegistrationThree(_application);
       }));
     } else {
       // If all data are not valid then start auto validation.
