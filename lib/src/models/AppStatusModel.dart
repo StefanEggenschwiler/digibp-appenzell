@@ -22,7 +22,7 @@ class AppStatus {
 
   Map<String, dynamic> toMap() {
     return {
-      'status' : status
+      'id' : id
     };
   }
 

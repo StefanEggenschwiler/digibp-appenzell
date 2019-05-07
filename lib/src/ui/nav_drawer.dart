@@ -1,6 +1,5 @@
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
 import 'package:digibp_appenzell/src/ui/home.dart';
-import 'package:digibp_appenzell/src/ui/registration_four.dart';
 import 'package:digibp_appenzell/src/ui/registration_one.dart';
 import 'package:digibp_appenzell/src/ui/status.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +56,7 @@ class NavDrawer extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                    return RegistrationFour(null);
+                    return RetrieveStatus();
                   }));
                 },
               )

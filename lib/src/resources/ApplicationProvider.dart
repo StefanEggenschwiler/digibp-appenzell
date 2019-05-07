@@ -10,7 +10,7 @@ class ApplicationProvider {
 
   final String employersWebHook = 'https://hook.integromat.com/i9d781qy7edvanqliibdsw6fmo28gu1y';
   final String usersWebHook = '';
-  final String caseWebHook = '';
+  final String caseWebHook = 'https://hook.integromat.com/5ikusfdktgtr8laljodbg3jx5l1ug36m';
 
   ApplicationProvider._();
 
@@ -31,8 +31,12 @@ class ApplicationProvider {
   }
 
   Future<AppStatus> getStatus(int applicationId) async {
-    var response = await http.get(caseWebHook);
+    debugPrint(appStatusToJson(new AppStatus(id: applicationId)));
+    var response = await http.post('https://hook.integromat.com/5ikusfdktgtr8laljodbg3jx5l1ug36m', body: appStatusToJson(new AppStatus(id: applicationId)));
     debugPrint('${response.body}');
+    if (response.statusCode == 404) {
+      return new AppStatus(id: applicationId, status: "NOT FOUND");
+    }
     return appStatusFromJson(response.body);
   }
 
@@ -44,7 +48,7 @@ class ApplicationProvider {
   }
 
   Future<Application> getByAHV(String ahv) async {
-    var response = await http.get(usersWebHook);
+    var response = await http.post(usersWebHook);
     debugPrint('${response.body}');
     return applicationFromJson(response.body);
   }
