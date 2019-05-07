@@ -26,6 +26,10 @@
 .pub-cache/
 .pub/
 /build/
+*.lock
+
+# Firebase related
+google-services.json
 
 # Android related
 **/android/**/gradle-wrapper.jar
