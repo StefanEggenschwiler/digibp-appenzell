@@ -1,7 +1,12 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
 import 'package:digibp_appenzell/src/models/ApplicationModel.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:core';
 
 
@@ -19,160 +24,307 @@ class RegistrationFour extends StatefulWidget {
 }
 
 class RegistrationState extends State<RegistrationFour> {
-  final _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
   Application _application;
+
+  File _file;
+  List<Face> _face = <Face>[];
+  FaceDetector _detector;
+
+  List statuses = ['open', 'closed'];
+  List eyes = ['left', 'right'];
+  List smiles = [true, false];
+
+  var resultMap = Map();
+
 
   RegistrationState(Application application) {
     _application = application;
   }
 
   @override
+  void initState() {
+    super.initState();
+    _generateCaptcha();
+    FaceDetectorOptions options = new FaceDetectorOptions(
+        mode: FaceDetectorMode.accurate,
+        enableLandmarks: true,
+        enableClassification: true,
+        minFaceSize: 0.15,
+        enableTracking: true);
+    _detector = FirebaseVision.instance.faceDetector(options);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppTranslations.of(context).text('tab_registration')),
+          title: Text(AppTranslations.of(context).text('tab_verification')),
         ),
-        body: SingleChildScrollView(
-            child: new Form(
-              key: _formKey,
-              autovalidate: _autoValidate,
-              child: formUI(),
-            )));
+        body: showBody(_file),
+        floatingActionButton: new FloatingActionButton(
+          onPressed: () async {
+            var file = await ImagePicker.pickImage(source: ImageSource.camera);
+            setState(() {
+              _file = file;
+            });
+
+            if(_file != null) {
+              await _detector.processImage(FirebaseVisionImage.fromFile(_file)).then((face) {
+                setState(() {
+                  if (face.isEmpty) {
+                    debugPrint('No face detected');
+                    Fluttertoast.showToast(
+                        msg: AppTranslations.of(context).text('txt_no_face_detected'),
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIos: 3,
+                        backgroundColor: Colors.grey,
+                        textColor: Colors.white);
+                  } else {
+                    debugPrint('Face validation retrieved');
+                    _face = face;
+                  }
+                });
+              });
+            }
+          },
+          child: new Icon(Icons.tag_faces),
+        ));
   }
 
-  var _currentStep = 3;
-
-  Widget formUI() {
-    return new Column(
+  Widget showBody(File file) {
+    return new ListView(
       children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(top: 10),
-          child: Stepper(
-            physics: ClampingScrollPhysics(),
-            type: StepperType.vertical,
-            currentStep: _currentStep,
-            controlsBuilder:
-                (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-              return Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    RaisedButton.icon(
-                      icon: Icon(Icons.camera),
-                      onPressed: _validateInputs,
-                      label: Text(AppTranslations.of(context).text('txt_submit')),
-                    ),
-                    FlatButton.icon(
-                      icon: Icon(Icons.add_a_photo),
-                      label: Text(AppTranslations.of(context).text('txt_cancel')),
-                      onPressed: onStepCancel,
-                    )
-                  ],
-                ),
-              );
-            },
-            steps: [
-              new Step(
-                // Title of the Step
-                title: Text(AppTranslations.of(context).text('txt_step1')),
-                // Content, it can be any widget here. Using basic Text for this example
-                content: ListTile(),
-                isActive: false,
-                state: StepState.complete,
-                subtitle: Text(AppTranslations.of(context).text('txt_ssn_enter')),
-              ),
-              new Step(
-                // Title of the Step
-                title: Text(AppTranslations.of(context).text('txt_step2')),
-                // Content, it can be any widget here. Using basic Text for this example
-                content: ListTile(),
-                isActive: false,
-                state: StepState.complete,
-                subtitle: Text(AppTranslations.of(context).text('txt_personal_information')),
-              ),
-              new Step(
-                title: Text(AppTranslations.of(context).text('txt_step3')),
-                content: ListTile(),
-                isActive: false,
-                state: StepState.complete,
-                subtitle: Text(AppTranslations.of(context).text('txt_case_information')),
-              ),
-              new Step(
-                title: Text(AppTranslations.of(context).text('txt_step4')),
-                content: ListTile(),
-                isActive: false,
-                state: StepState.editing,
-                subtitle: Text(AppTranslations.of(context).text('txt_face_captcha')),
-              ),
-              new Step(
-                title: Text(AppTranslations.of(context).text('txt_step5')),
-                content: ListTile(),
-                isActive: false,
-                state: StepState.disabled,
-                subtitle: Text(AppTranslations.of(context).text('txt_finalise_submission')),
-              ),
-            ],
-            onStepCancel: () {
-              // On hitting cancel button, change the state
-              setState(() {
-                // update the variable handling the current step value
-                // going back one step i.e subtracting 1, until its 0
-                if (_currentStep > 0) {
-                  _currentStep = _currentStep - 1;
-                } else {
-                  _currentStep = 0;
-                }
-              });
-              // Log function call
-              debugPrint('onStepCancel : $_currentStep');
-            },
-            onStepContinue: () {
-              setState(() {
-                // update the variable handling the current step value
-                // going back one step i.e adding 1, until its the length of the step
-                if (_currentStep < 2) {
-                  _currentStep = _currentStep + 1;
-                }
-              });
-              // Log function call
-              debugPrint('onStepContinue : $_currentStep');
-            },
-          ),
-        ),
-      ],
+        _displayCaptcha(),
+        new Stack(
+          children: <Widget>[
+            _buildImage(),
+            _buildRow(_face),
+          ],
+        )],
     );
   }
 
-  String validateEmpty(String value) {
-    if (value.isEmpty)
-      return AppTranslations.of(context).text('txt_text_error');
-    else
-      return null;
+  _generateCaptcha() {
+    for (String eye in eyes) {
+      resultMap[eye] = (statuses..shuffle()).first;
+    }
+    resultMap['smile'] = (smiles..shuffle()).first;
   }
 
-  void _validateInputs() {
-    if (_formKey.currentState.validate()) {
-      // If all data are correct then save data to out variables
-      _formKey.currentState.save();
-      Fluttertoast.showToast(
-          msg: AppTranslations.of(context).text('txt_case_submitted'),
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white);
-      debugPrint(applicationToJson(_application));
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return null;
-      }));
-    } else {
-      // If all data are not valid then start auto validation.
-      setState(() {
-        _autoValidate = true;
-      });
+  Widget _displayCaptcha() {
+    return new Container(
+      child: Text.rich(
+        TextSpan(
+            text: '',
+            style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),
+            children: <TextSpan> [
+              TextSpan(
+                  text: 'Before you can finish your application, you need to verify that you are a human by solving belows FaceCaptcha®:\n\n',
+                  style: TextStyle(fontStyle: FontStyle.normal, fontSize: 11)
+              ),
+              TextSpan(
+                text: 'Please take a picture of yourself with your ',
+              ),
+              TextSpan(
+                text: 'left eye ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              TextSpan(
+                text: '${resultMap['left']}',
+                style: TextStyle(fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+              ),
+              TextSpan(
+                text: ' and your ',
+              ),
+              TextSpan(
+                text: 'right eye ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              TextSpan(
+                text: '${resultMap['right']}',
+                style: TextStyle(fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+              ),
+              TextSpan(
+                text: ', while you are ',
+              ),
+              TextSpan(
+                text: '${resultMap['smile'] ? "smiling" : "not smiling"}',
+                style: TextStyle(fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+              ),
+              TextSpan(
+                text: '!',
+              ),
+            ]
+        ),
+      ),
+      margin: const EdgeInsets.all(10),
+
+    );
+  }
+
+  Widget _buildImage() {
+    if (_face.length > 0) _validateImage(_face[0]);
+    return new Container(
+      margin: _file != null ? EdgeInsets.only(top: 10, left: 30, right: 30) : EdgeInsets.all(10),
+      child: new Container(
+        child: _file == null
+            ? new Text('\nTake a picture of yourself using the Floating Button at the bottom..', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),)
+            : new FutureBuilder<Size>(
+          future: _getImageSize(Image.file(_file, fit: BoxFit.fitWidth)),
+          builder: (BuildContext context, AsyncSnapshot<Size> snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                  foregroundDecoration: TextDetectDecoration(_face, snapshot.data),
+                  child: Image.file(_file, fit: BoxFit.fitWidth));
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Future _getImageSize(Image image) {
+    Completer<Size> completer = new Completer<Size>();
+    image.image.resolve(new ImageConfiguration()).addListener(
+            (ImageInfo info, bool _) => completer.complete(
+            Size(info.image.width.toDouble(), info.image.height.toDouble())));
+    return completer.future;
+  }
+
+  _validateImage(Face face) {
+    _checkData(_face);
+    debugPrint('face validation');
+    if (face == null || face.smilingProbability == null || face.leftEyeOpenProbability == null || face.rightEyeOpenProbability == null) return;
+    bool validLeft;
+    bool validRight;
+    bool validSmile;
+    resultMap['left'] == 'open'
+        ?
+    face.leftEyeOpenProbability >= 0.5 ? validLeft = true : validLeft = false
+        :
+    face.leftEyeOpenProbability < 0.5 ? validLeft = true : validLeft = false;
+
+    resultMap['right'] == 'open'
+        ?
+    face.rightEyeOpenProbability >= 0.5 ? validRight = true : validRight = false
+        :
+    face.rightEyeOpenProbability < 0.5 ? validRight = true : validRight = false;
+
+    resultMap['smile']
+        ?
+    face.smilingProbability >= 0.5 ? validSmile = true : validSmile = false
+        :
+    face.smilingProbability < 0.5 ? validSmile = true : validSmile = false;
+
+    debugPrint('left: $validLeft right: $validRight smile: $validSmile');
+
+    Fluttertoast.showToast(
+        msg: AppTranslations.of(context).text(
+            (validLeft && validRight && validSmile) ? 'txt_face_verified' :
+            !validSmile ? 'txt_error_smile' : 'txt_error_eyes'
+        ),
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIos: 3,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white);
+  }
+
+  void _checkData(List<Face> faceList) {
+    final double uncomputedProb = -1.0;
+    final int uncompProb = -1;
+    print('Length: ${faceList.length}');
+
+    for (int i = 0; i < faceList.length; i++) {
+      Rect bounds = faceList[i].boundingBox;
+      print('Rectangle : $bounds');
+
+      FaceLandmark landmark =
+      faceList[i].getLandmark(FaceLandmarkType.leftEar);
+
+      if (landmark != null) {
+        Offset leftEarPos = landmark.position;
+        print('Left Ear Pos : $leftEarPos');
+      }
+
+      if (faceList[i].smilingProbability != uncomputedProb) {
+        double smileProb = faceList[i].smilingProbability;
+        print('Smile Prob : $smileProb');
+      }
+
+      if (faceList[i].rightEyeOpenProbability != uncomputedProb) {
+        double rightEyeOpenProb = faceList[i].rightEyeOpenProbability;
+        print('RightEye Open Prob : $rightEyeOpenProb');
+      }
+
+      if (faceList[i].trackingId != uncompProb) {
+        int tID = faceList[i].trackingId;
+        print('Tracking ID : $tID');
+      }
     }
+  }
+
+  /*
+    LeftEyeOpenProbability : left Eye Open Probability
+    RightEyeOpenProbability : right Eye Open Probability
+    SmilingProbability : Smiling probability
+  */
+  Widget _buildRow(List faces) {
+    if (faces == null || faces.length == 0) return Container(width: 0, height: 0);
+    for(Face face in faces) {
+      return ListTile(
+        title: new Text(
+          '\nLeftEyeOpenProbability : ${face.leftEyeOpenProbability} '
+              '\nRightEyeOpenProbability : ${face.rightEyeOpenProbability} '
+              '\nSmileProb : ${face.smilingProbability} ',
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        ),
+        dense: true,
+      );
+    }
+  }
+}
+
+class _TextDetectPainter extends BoxPainter {
+  final List<Face> _faceLabels;
+  final Size _originalImageSize;
+  _TextDetectPainter(faceLabels, originalImageSize)
+      : _faceLabels = faceLabels,
+        _originalImageSize = originalImageSize;
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    final paint = new Paint()
+      ..strokeWidth = 2.0
+      ..color = Colors.red
+      ..style = PaintingStyle.stroke;
+
+    final _heightRatio = _originalImageSize.height / configuration.size.height;
+    final _widthRatio = _originalImageSize.width / configuration.size.width;
+    for (var faceLabel in _faceLabels) {
+      final _rect = Rect.fromLTRB(
+          offset.dx + faceLabel.boundingBox.left / _widthRatio,
+          offset.dy + faceLabel.boundingBox.top / _heightRatio,
+          offset.dx + faceLabel.boundingBox.right / _widthRatio,
+          offset.dy + faceLabel.boundingBox.bottom / _heightRatio);
+
+      canvas.drawRect(_rect, paint);
+    }
+  }
+}
+
+class TextDetectDecoration extends Decoration {
+  final Size _originalImageSize;
+  final List<Face> _texts;
+  TextDetectDecoration(List<Face> texts, Size originalImageSize)
+      : _texts = texts,
+        _originalImageSize = originalImageSize;
+
+  @override
+  BoxPainter createBoxPainter([VoidCallback onChanged]) {
+    return new _TextDetectPainter(_texts, _originalImageSize);
   }
 }
