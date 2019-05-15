@@ -6,7 +6,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:core';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-
+import 'package:digibp_appenzell/src/blocs/SubmitApplicationBloc.dart';
 
 import 'package:intl/intl.dart';
 
@@ -55,6 +55,11 @@ class RegistrationState extends State<RegistrationTwo> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -98,9 +103,7 @@ class RegistrationState extends State<RegistrationTwo> {
             },
             steps: [
               new Step(
-                // Title of the Step
                 title: Text(AppTranslations.of(context).text('txt_step1')),
-                // Content, it can be any widget here. Using basic Text for this example
                 content: ListTile(),
                 isActive: false,
                 state: StepState.complete,
@@ -108,146 +111,9 @@ class RegistrationState extends State<RegistrationTwo> {
               ),
               new Step(
                 title: Text('Step 2'),
-                content: Column(
-                  children: <Widget>[
-                    new ListTile(
-                        leading: const Icon(Icons.person),
-                        title: new TextFormField(
-                          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_fname')),
-                          keyboardType: TextInputType.text,
-                          focusNode: _firstNameFocus,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (term) {
-                            _fieldFocusChange(context, _firstNameFocus, _lastNameFocus);
-                          },
-                          validator: validateEmpty,
-                          onSaved: (String val) {
-                            _firstName = val;
-                          },
-                        )),
-                    new ListTile(
-                        leading: new Text(''),
-                        title: new TextFormField(
-                          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_lname')),
-                          keyboardType: TextInputType.text,
-                          focusNode: _lastNameFocus,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (term) {
-                            _fieldFocusChange(context, _lastNameFocus, _birthDateFocus);
-                          },
-                          validator: validateEmpty,
-                          onSaved: (String val) {
-                            _lastName = val;
-                          },
-                        )),
-                    new ListTile(
-                        leading: const Icon(Icons.date_range),
-                        title: DateTimePickerFormField(
-                          inputType: InputType.date,
-                          format: DateFormat('yyyy-MM-dd'),
-                          editable: true,
-                          focusNode: _birthDateFocus,
-                          onFieldSubmitted: (term) {
-                            _fieldFocusChange(context, _birthDateFocus, _addressFocus);
-                          },
-                          initialDate: new DateTime(2000),
-                          decoration: InputDecoration(
-                              labelText: AppTranslations.of(context).text('lbl_bdate'), hasFloatingPlaceholder: false),
-                          validator: validateBirthDate,
-                          onSaved: (DateTime val) {
-                            _birthDate = val;
-                          },
-                        )),
-                    new ListTile(
-                        leading: const Icon(Icons.home),
-                        title: new TextFormField(
-                          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_address')),
-                          keyboardType: TextInputType.text,
-                          focusNode: _addressFocus,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (term) {
-                            _fieldFocusChange(context, _addressFocus, _zipCodeFocus);
-                          },
-                          validator: validateEmpty,
-                          onSaved: (String val) {
-                            _address = val;
-                          },
-                        )),
-                    new ListTile(
-                        leading: new Text(''),
-                        title: new TextFormField(
-                          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_zip_code')),
-                          keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
-                          focusNode: _zipCodeFocus,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (term) {
-                            _fieldFocusChange(context, _zipCodeFocus, _cityFocus);
-                          },
-                          validator: validateZipCode,
-                          onSaved: (String val) {
-                            _zipCode = num.parse(val);
-                          },
-                        )),
-                    new ListTile(
-                        leading: const Icon(Icons.location_city),
-                        title: new TextFormField(
-                          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_city')),
-                          keyboardType: TextInputType.text,
-                          focusNode: _cityFocus,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (term) {
-                            _fieldFocusChange(context, _cityFocus, _countryFocus);
-                          },
-                          validator: validateCity,
-                          onSaved: (String val) {
-                            _city = val;
-                          },
-                        )),
-                    new ListTile(
-                        leading: const Icon(Icons.flag),
-                        title: new TextFormField(
-                          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_country')),
-                          keyboardType: TextInputType.text,
-                          focusNode: _countryFocus,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (term) {
-                            _fieldFocusChange(context, _countryFocus, _emailFocus);
-                          },
-                          validator: validateCountry,
-                          onSaved: (String val) {
-                            _country = val;
-                          },
-                        )),
-                    new ListTile(
-                        leading: const Icon(Icons.email),
-                        title: new TextFormField(
-                          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_email')),
-                          keyboardType: TextInputType.emailAddress,
-                          focusNode: _emailFocus,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (term) {
-                            _fieldFocusChange(context, _emailFocus, _phoneFocus);
-                          },
-                          validator: validateEmail,
-                          onSaved: (String val) {
-                            _email = val;
-                          },
-                        )),
-                    new ListTile(
-                        leading: const Icon(Icons.phone),
-                        title: new TextFormField(
-                          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_phone')),
-                          keyboardType: TextInputType.phone,
-                          focusNode: _phoneFocus,
-                          textInputAction: TextInputAction.done,
-                          validator: validatePhone,
-                          onSaved: (String val) {
-                            _phone = val;
-                          },
-                        )),
-                  ],
+                content: new Column(
+                  children: generateForm(),
                 ),
-                // You can change the style of the step icon i.e number, editing, etc.
                 state: StepState.editing,
                 isActive: true,
                 subtitle: Text(AppTranslations.of(context).text('txt_personal_information')),
@@ -305,6 +171,157 @@ class RegistrationState extends State<RegistrationTwo> {
     );
   }
 
+  generateForm() {
+    List<Widget> forms = new List();
+
+    forms.add(new ListTile(
+        leading: const Icon(Icons.person),
+        title: new TextFormField(
+          initialValue: _application.firstName != null ? _application.firstName : '',
+          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_fname')),
+          keyboardType: TextInputType.text,
+          focusNode: _firstNameFocus,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (term) {
+            _fieldFocusChange(context, _firstNameFocus, _lastNameFocus);
+          },
+          validator: validateEmpty,
+          onSaved: (String val) {
+            _firstName = val;
+          },
+        )));
+    forms.add(new ListTile(
+        leading: new Text(''),
+        title: new TextFormField(
+          initialValue: _application.lastName != null ? _application.lastName : '',
+          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_lname')),
+          keyboardType: TextInputType.text,
+          focusNode: _lastNameFocus,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (term) {
+            _fieldFocusChange(context, _lastNameFocus, _birthDateFocus);
+          },
+          validator: validateEmpty,
+          onSaved: (String val) {
+            _lastName = val;
+          },
+        )));
+    forms.add(new ListTile(
+        leading: const Icon(Icons.date_range),
+        title: DateTimePickerFormField(
+          initialValue: _application.birthDate != null ? _application.birthDate : null,
+          inputType: InputType.date,
+          format: DateFormat('yyyy-MM-dd'),
+          editable: true,
+          focusNode: _birthDateFocus,
+          onFieldSubmitted: (term) {
+            _fieldFocusChange(context, _birthDateFocus, _addressFocus);
+          },
+          initialDate: new DateTime(2000),
+          decoration: InputDecoration(
+              labelText: AppTranslations.of(context).text('lbl_bdate'), hasFloatingPlaceholder: false),
+          validator: validateBirthDate,
+          onSaved: (DateTime val) {
+            _birthDate = val;
+          },
+        )));
+    forms.add(new ListTile(
+        leading: const Icon(Icons.home),
+        title: new TextFormField(
+          initialValue: _application.address != null ? _application.address : '',
+          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_address')),
+          keyboardType: TextInputType.text,
+          focusNode: _addressFocus,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (term) {
+            _fieldFocusChange(context, _addressFocus, _zipCodeFocus);
+          },
+          validator: validateEmpty,
+          onSaved: (String val) {
+            _address = val;
+          },
+        )));
+    forms.add(new ListTile(
+        leading: new Text(''),
+        title: new TextFormField(
+          initialValue: _application.zipCode != null ? _application.zipCode.toString() : '',
+          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_zip_code')),
+          keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
+          focusNode: _zipCodeFocus,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (term) {
+            _fieldFocusChange(context, _zipCodeFocus, _cityFocus);
+          },
+          validator: validateZipCode,
+          onSaved: (String val) {
+            _zipCode = num.parse(val);
+          },
+        )));
+    forms.add(new ListTile(
+        leading: const Icon(Icons.location_city),
+        title: new TextFormField(
+          initialValue: _application.city != null ? _application.city : '',
+          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_city')),
+          keyboardType: TextInputType.text,
+          focusNode: _cityFocus,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (term) {
+            _fieldFocusChange(context, _cityFocus, _countryFocus);
+          },
+          validator: validateCity,
+          onSaved: (String val) {
+            _city = val;
+          },
+        )));
+    forms.add(new ListTile(
+        leading: const Icon(Icons.flag),
+        title: new TextFormField(
+          initialValue: _application.country != null ? _application.country : '',
+          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_country')),
+          keyboardType: TextInputType.text,
+          focusNode: _countryFocus,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (term) {
+            _fieldFocusChange(context, _countryFocus, _emailFocus);
+          },
+          validator: validateCountry,
+          onSaved: (String val) {
+            _country = val;
+          },
+        )));
+    forms.add(new ListTile(
+        leading: const Icon(Icons.email),
+        title: new TextFormField(
+          initialValue: _application.email != null ? _application.email : '',
+          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_email')),
+          keyboardType: TextInputType.emailAddress,
+          focusNode: _emailFocus,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (term) {
+            _fieldFocusChange(context, _emailFocus, _phoneFocus);
+          },
+          validator: validateEmail,
+          onSaved: (String val) {
+            _email = val;
+          },
+        )));
+    forms.add(new ListTile(
+        leading: const Icon(Icons.phone),
+        title: new TextFormField(
+          initialValue: _application.phone != null ? _application.phone : '',
+          decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_phone')),
+          keyboardType: TextInputType.phone,
+          focusNode: _phoneFocus,
+          textInputAction: TextInputAction.done,
+          validator: validatePhone,
+          onSaved: (String val) {
+            _phone = val;
+          },
+        )));
+
+    return forms;
+  }
+
   void _fieldFocusChange(context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
@@ -360,17 +377,24 @@ class RegistrationState extends State<RegistrationTwo> {
       _application.country = _country;
       _application.email = _email;
       _application.phone = _phone;
-      Fluttertoast.showToast(
-          msg: AppTranslations.of(context).text('txt_case_submitted'),
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white);
-      debugPrint('Validation : $_application');
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return RegistrationThree(_application);
-      }));
+
+      bloc.insertUpdateUser(_application).then((id) {
+        debugPrint('Move To Reg 3 : ${id.toString()}');
+        if(id > 0) _application.id = id;
+        Fluttertoast.showToast(
+            msg: id > 0 ? AppTranslations.of(context).text('txt_user_created') : AppTranslations.of(context).text('txt_user_updated'),
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 2,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white);
+        debugPrint('Validation : $_application');
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return RegistrationThree(_application);
+        }));
+      });
+
+
     } else {
       // If all data are not valid then start auto validation.
       setState(() {

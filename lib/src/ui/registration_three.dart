@@ -192,6 +192,7 @@ class RegistrationState extends State<RegistrationThree> {
       // If all data are correct then save data to out variables
       _formKey.currentState.save();
       _application.employerId = _selected.id;
+      debugPrint('Move To Reg 4 : ${_selected.id}');
       debugPrint('Validation OK: $_application');
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return RegistrationFour(_application);

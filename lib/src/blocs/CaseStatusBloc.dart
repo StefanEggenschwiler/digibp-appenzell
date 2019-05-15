@@ -10,8 +10,8 @@ class CaseStatusBloc {
   Observable<AppStatus> get appStatus => _statusFetcher.stream;
 
   getCaseStatus(int caseId) async {
-    AppStatus employers = await _repository.getStatus(caseId);
-    _statusFetcher.sink.add(employers);
+    AppStatus appStatus = await _repository.getStatus(caseId);
+    _statusFetcher.sink.add(appStatus);
   }
 
   dispose() async {

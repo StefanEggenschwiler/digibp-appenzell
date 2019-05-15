@@ -9,30 +9,39 @@ import 'dart:convert';
 class ApplicationProvider {
 
   final String employersWebHook = 'https://hook.integromat.com/i9d781qy7edvanqliibdsw6fmo28gu1y';
-  final String usersWebHook = '';
+  final String usersWebHook = 'https://hook.integromat.com/0qe68l3pwn3fx8avu7hiwpijlxesn7un';
   final String caseWebHook = 'https://hook.integromat.com/5ikusfdktgtr8laljodbg3jx5l1ug36m';
+  final String statusWebHook = 'https://hook.integromat.com/5ikusfdktgtr8laljodbg3jx5l1ug36m';
 
   ApplicationProvider._();
 
   static final ApplicationProvider api = ApplicationProvider._();
 
-  insert(Application application) {
-    http.post(caseWebHook, body: applicationToJson(application))
-        .then((onResponse) {
-          debugPrint('Insert: $onResponse');
-    });
+  Future<int> insertUpdateUser(Application application) async {
+    var response = await http.post(
+        'https://hook.integromat.com/zjfesnrdov34htafsfecg6xy14d7ch7c',
+        body: applicationToJson(application),
+        headers: {'Content-type': 'application/json'}
+        );
+    debugPrint('INSERT UPDATE RESPONSE: ${response.statusCode} - ${response.body}');
+    if(response.statusCode == 201) {
+      return int.parse(response.body);
+    } else {
+      return 0;
+    }
   }
 
-  update(Application application) {
-    http.post(caseWebHook, body: applicationToJson(application))
-        .then((onResponse) {
-      debugPrint('Update: $onResponse');
-    });
+  insertCase(Application application) async {
+    var response = await http.post(caseWebHook, body: applicationToJson(application), headers: {'Content-type': 'application/json'});
+    debugPrint('${response.statusCode} - ${response.body}');
   }
 
   Future<AppStatus> getStatus(int applicationId) async {
     debugPrint(appStatusToJson(new AppStatus(id: applicationId)));
-    var response = await http.post('https://hook.integromat.com/5ikusfdktgtr8laljodbg3jx5l1ug36m', body: appStatusToJson(new AppStatus(id: applicationId)));
+    var response = await http.post('https://hook.integromat.com/mim5396ufu7uttsdvib2dj1b44io1uun',
+        body: appStatusToJson(new AppStatus(id: applicationId)),
+        headers: {'Content-type': 'application/json'}
+        );
     debugPrint('${response.body}');
     if (response.statusCode == 404) {
       return new AppStatus(id: applicationId, status: "NOT FOUND");
@@ -48,8 +57,18 @@ class ApplicationProvider {
   }
 
   Future<Application> getByAHV(String ahv) async {
-    var response = await http.post(usersWebHook);
+    Application application = new Application(ahv: ahv);
+    debugPrint(applicationToJson(application));
+
+    var response = await http.post(
+        'https://hook.integromat.com/h1cq9xlo7acde00o5ki7h1ft6bb94y7l',
+        body: applicationToJson(application),
+        headers: {'Content-type': 'application/json'}
+    );
     debugPrint('${response.body}');
+    if (response.statusCode == 404) {
+      return application;
+    }
     return applicationFromJson(response.body);
   }
 }

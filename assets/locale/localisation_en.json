@@ -29,6 +29,8 @@
   "txt_zip_code_error": "Invalid ZIP code",
   "txt_email_error": "Enter valid email",
   "txt_case_submitted": "Case submitted!",
+  "txt_user_created": "User created!",
+  "txt_user_updated": "User updated!",
   "txt_no_face_detected": "No face detected.\nPlease try again!",
   "txt_face_verified": "FaceCaptcha® Validation Successful!",
   "txt_error_eyes": "Your eyes could not be recognized properly!",

@@ -1,5 +1,6 @@
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
 import 'package:digibp_appenzell/src/models/ApplicationModel.dart';
+import 'package:digibp_appenzell/src/blocs/GetApplicationBloc.dart';
 import 'package:digibp_appenzell/src/ui/registration_two.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -166,9 +167,14 @@ class RegistrationState extends State<RegistrationOne> {
       _formKey.currentState.save();
       _application.ahv = _ssn;
       debugPrint('Validation : $_application');
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return RegistrationTwo(_application);
-      }));
+
+      bloc.getApplicationByAhv(_application.ahv);
+      bloc.application.listen((data) {
+        debugPrint('Move To Reg 2 : ${data.toString()}');
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return RegistrationTwo(data);
+        }));
+      });
     } else {
       // If all data are not valid then start auto validation.
       setState(() {

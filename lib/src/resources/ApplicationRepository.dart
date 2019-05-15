@@ -5,9 +5,9 @@ import 'package:digibp_appenzell/src/resources/ApplicationProvider.dart';
 
 class ApplicationRepository {
 
-  Future<void> insert(Application application) => ApplicationProvider.api.insert(application);
+  Future<int> insertUpdateUser(Application application) => ApplicationProvider.api.insertUpdateUser(application);
 
-  Future<void> update(Application application) => ApplicationProvider.api.update(application);
+  Future<void> insertCase(Application application) => ApplicationProvider.api.insertCase(application);
 
   Future<AppStatus> getStatus(int applicationId) => ApplicationProvider.api.getStatus(applicationId);
 
