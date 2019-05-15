@@ -38,6 +38,8 @@
   "txt_error_case_id": "Must be a valid application id",
   "lbl_fname": "Firstname",
   "lbl_lname": "Lastname",
+  "lbl_male": "Male",
+  "lbl_female": "Female",
   "lbl_bdate": "Birthdate",
   "lbl_address": "Address",
   "lbl_zip_code": "ZIP Code",

@@ -61,7 +61,7 @@ class ApplicationProvider {
     debugPrint(applicationToJson(application));
 
     var response = await http.post(
-        'https://hook.integromat.com/h1cq9xlo7acde00o5ki7h1ft6bb94y7l',
+        'https://hook.integromat.com/k3fr1hnu6l4jylaoe8hbj5af1luyudng',
         body: applicationToJson(application),
         headers: {'Content-type': 'application/json'}
     );

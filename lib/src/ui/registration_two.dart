@@ -42,11 +42,12 @@ class RegistrationState extends State<RegistrationTwo> {
 
   String _firstName;
   String _lastName;
+  String _gender;
   DateTime _birthDate;
   String _address;
   int _zipCode;
   String _city;
-  String _country;
+  String _citizenship;
   String _email;
   String _phone;
 
@@ -207,6 +208,34 @@ class RegistrationState extends State<RegistrationTwo> {
           },
         )));
     forms.add(new ListTile(
+      leading: new Text(''),
+      title: new Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          new Radio(
+            value: 'male',
+            groupValue: _gender,
+            onChanged: _radioButtonChanges,
+          ),
+          new Text(
+            AppTranslations.of(context).text('lbl_male'),
+            style: new TextStyle(fontSize: 16.0),
+          ),
+          new Radio(
+            value: 'female',
+            groupValue: _gender,
+            onChanged: _radioButtonChanges,
+          ),
+          new Text(
+            AppTranslations.of(context).text('lbl_female'),
+            style: new TextStyle(
+              fontSize: 16.0,
+            ),
+          )
+        ],
+      ),
+    ));
+    forms.add(new ListTile(
         leading: const Icon(Icons.date_range),
         title: DateTimePickerFormField(
           initialValue: _application.birthDate != null ? _application.birthDate : null,
@@ -276,7 +305,7 @@ class RegistrationState extends State<RegistrationTwo> {
     forms.add(new ListTile(
         leading: const Icon(Icons.flag),
         title: new TextFormField(
-          initialValue: _application.country != null ? _application.country : '',
+          initialValue: _application.citizenship != null ? _application.citizenship : '',
           decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_country')),
           keyboardType: TextInputType.text,
           focusNode: _countryFocus,
@@ -286,7 +315,7 @@ class RegistrationState extends State<RegistrationTwo> {
           },
           validator: validateCountry,
           onSaved: (String val) {
-            _country = val;
+            _citizenship = val;
           },
         )));
     forms.add(new ListTile(
@@ -320,6 +349,13 @@ class RegistrationState extends State<RegistrationTwo> {
         )));
 
     return forms;
+  }
+
+  void _radioButtonChanges(String value) {
+    setState(() {
+      _gender = value;
+      debugPrint(_gender); //Debug the choice in console
+    });
   }
 
   void _fieldFocusChange(context, FocusNode currentFocus, FocusNode nextFocus) {
@@ -374,9 +410,12 @@ class RegistrationState extends State<RegistrationTwo> {
       _application.address = _address;
       _application.zipCode = _zipCode;
       _application.city = _city;
-      _application.country = _country;
+      _application.citizenship = _citizenship;
       _application.email = _email;
       _application.phone = _phone;
+      _application.gender = _gender;
+
+      debugPrint('Validation : $_application');
 
       bloc.insertUpdateUser(_application).then((id) {
         debugPrint('Move To Reg 3 : ${id.toString()}');
@@ -388,7 +427,6 @@ class RegistrationState extends State<RegistrationTwo> {
             timeInSecForIos: 2,
             backgroundColor: Colors.grey,
             textColor: Colors.white);
-        debugPrint('Validation : $_application');
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return RegistrationThree(_application);
         }));

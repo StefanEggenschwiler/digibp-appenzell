@@ -21,10 +21,11 @@ class Application {
   String address;
   int zipCode;
   String city;
-  String country;
+  String citizenship;
   String phone;
+  String gender;
 
-  Application({id, employerId, email, phone, firstName, lastName, birthDate, ahv, address, zipCode, city, country}) :
+  Application({id, employerId, email, phone, firstName, lastName, birthDate, ahv, address, zipCode, city, citizenship, gender}) :
         id = id,
         employerId = employerId,
         email = email,
@@ -36,7 +37,8 @@ class Application {
         address = address,
         zipCode = zipCode,
         city = city,
-        country = country
+        citizenship = citizenship,
+        gender = gender
   ;
 
 
@@ -53,7 +55,8 @@ class Application {
       'address' : address,
       'zip_code' : zipCode,
       'city' : city,
-      'country' : country
+      'citizenship' : citizenship,
+      'gender' : gender
     };
   }
 
@@ -68,11 +71,12 @@ class Application {
       address: V['address'],
       zipCode: V['zip_code'],
       city: V['city'],
-      country: V['country']
+      citizenship: V['citizenship'],
+      gender: V['gender']
   );
 
   @override
   String toString() {
-    return 'Application{id: $id, employerId: $employerId, email: $email, phone: $phone, firstName: $firstName, lastName: $lastName, birthDate: $birthDate, ahv: $ahv, address: $address, zipCode: $zipCode, city: $city, country: $country}';
+    return 'Application{id: $id, employerId: $employerId, email: $email, phone: $phone, firstName: $firstName, lastName: $lastName, birthDate: $birthDate, ahv: $ahv, address: $address, zipCode: $zipCode, city: $city, citizenship: $citizenship}';
   }
 }
