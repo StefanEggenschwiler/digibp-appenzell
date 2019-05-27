@@ -36,6 +36,9 @@
   "txt_error_eyes": "Your eyes could not be recognized properly!",
   "txt_error_smile": "Your mouth could not be recognized properly!",
   "txt_error_case_id": "Must be a valid application id",
+  "txt_application_submission": "You have successfully completed the \nregistration process.\nBy clicking on the button below,\nyour application will be forwarded to the öRAV Basel Stadt for further processing.",
+  "txt_application_created": "Your application was submitted! You will receive an email shortly.",
+  "txt_application_error" : "An error occurred during transmission. Please verify that your device is connected to the Internet and try again.",
   "lbl_fname": "Firstname",
   "lbl_lname": "Lastname",
   "lbl_male": "Male",
@@ -50,5 +53,6 @@
   "lbl_ssn": "Swiss SSN Number",
   "lbl_case_id": "Application ID",
   "lbl_search_case": "Search",
+  "lbl_submit_case": "Submit Case",
   "txt_employer_selection": "WOAH!!!! Welcome to the employer selection page! \tლ(=ↀωↀ=)ლ"
 }

@@ -7,7 +7,7 @@ class ApplicationRepository {
 
   Future<int> insertUpdateUser(Application application) => ApplicationProvider.api.insertUpdateUser(application);
 
-  Future<void> insertCase(Application application) => ApplicationProvider.api.insertCase(application);
+  Future<bool> insertCase(Application application) => ApplicationProvider.api.insertCase(application);
 
   Future<AppStatus> getStatus(int applicationId) => ApplicationProvider.api.getStatus(applicationId);
 

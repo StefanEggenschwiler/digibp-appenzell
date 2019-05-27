@@ -8,7 +8,7 @@ class SubmitApplicationBloc {
     return _repository.insertUpdateUser(application);
   }
 
-  Future<void> insertCase(Application application) async {
+  Future<bool> insertCase(Application application) async {
     return _repository.insertCase(application);
   }
 }

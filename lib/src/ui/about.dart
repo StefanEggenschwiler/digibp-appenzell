@@ -12,7 +12,15 @@ class About extends StatelessWidget {
       appBar: new AppBar(
         title: new Text(AppTranslations.of(context).text('tab_about')),
       ),
-      body: Text(AppTranslations.of(context).text('txt_about')),
+      body: new Container(
+        margin: const EdgeInsets.only(top: 20, left: 15, right: 15),
+        child: Text(
+          AppTranslations.of(context).text('txt_about'),
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.clip,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )
+      )
     );
   }
 }
