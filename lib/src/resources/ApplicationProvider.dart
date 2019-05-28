@@ -31,9 +31,14 @@ class ApplicationProvider {
     }
   }
 
-  insertCase(Application application) async {
+  Future<bool> insertCase(Application application) async {
     var response = await http.post(caseWebHook, body: applicationToJson(application), headers: {'Content-type': 'application/json'});
     debugPrint('${response.statusCode} - ${response.body}');
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<AppStatus> getStatus(int applicationId) async {
