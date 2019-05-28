@@ -3,6 +3,8 @@ import 'package:digibp_appenzell/src/localisation/app_translations_delegate.dart
 import 'package:digibp_appenzell/src/ui/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:digibp_appenzell/src/models/ApplicationModel.dart';
+
 
 void main(){
   runApp(App());

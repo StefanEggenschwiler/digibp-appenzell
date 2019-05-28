@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:core';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:digibp_appenzell/src/blocs/SubmitApplicationBloc.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 
 import 'package:intl/intl.dart';
 
@@ -294,9 +295,6 @@ class RegistrationState extends State<RegistrationTwo> {
           keyboardType: TextInputType.text,
           focusNode: _cityFocus,
           textInputAction: TextInputAction.next,
-          onFieldSubmitted: (term) {
-            _fieldFocusChange(context, _cityFocus, _countryFocus);
-          },
           validator: validateCity,
           onSaved: (String val) {
             _city = val;
@@ -304,7 +302,15 @@ class RegistrationState extends State<RegistrationTwo> {
         )));
     forms.add(new ListTile(
         leading: const Icon(Icons.flag),
-        title: new TextFormField(
+        title: new CountryCodePicker(
+          onChanged: (countryCode) {
+            _citizenship = countryCode.toString();
+          },
+          initialSelection: 'CH',
+          showCountryOnly: true,
+        ),
+
+      /*new TextFormField(
           initialValue: _application.citizenship != null ? _application.citizenship : '',
           decoration: InputDecoration(labelText: AppTranslations.of(context).text('lbl_country')),
           keyboardType: TextInputType.text,
@@ -317,7 +323,7 @@ class RegistrationState extends State<RegistrationTwo> {
           onSaved: (String val) {
             _citizenship = val;
           },
-        )));
+        )*/));
     forms.add(new ListTile(
         leading: const Icon(Icons.email),
         title: new TextFormField(
@@ -431,8 +437,6 @@ class RegistrationState extends State<RegistrationTwo> {
           return RegistrationThree(_application);
         }));
       });
-
-
     } else {
       // If all data are not valid then start auto validation.
       setState(() {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 
 Application applicationFromJson(String str) {
   final jsonData = json.decode(str);
@@ -6,6 +7,7 @@ Application applicationFromJson(String str) {
 }
 
 String applicationToJson(Application data) {
+  debugPrint(data.toString());
   final dyn = data.toMap();
   return json.encode(dyn);
 }
@@ -24,8 +26,10 @@ class Application {
   String citizenship;
   String phone;
   String gender;
+  DateTime dateOfUnemployment;
+  DateTime dateOfWorkpermit;
 
-  Application({id, employerId, email, phone, firstName, lastName, birthDate, ahv, address, zipCode, city, citizenship, gender}) :
+  Application({id, employerId, email, phone, firstName, lastName, birthDate, ahv, address, zipCode, city, citizenship, gender, dateOfUnemployment, dateOfWorkpermit}) :
         id = id,
         employerId = employerId,
         email = email,
@@ -38,7 +42,9 @@ class Application {
         zipCode = zipCode,
         city = city,
         citizenship = citizenship,
-        gender = gender
+        gender = gender,
+        dateOfUnemployment = dateOfUnemployment,
+        dateOfWorkpermit = dateOfWorkpermit
   ;
 
 
@@ -56,7 +62,9 @@ class Application {
       'zip_code' : zipCode,
       'city' : city,
       'citizenship' : citizenship,
-      'gender' : gender
+      'gender' : gender,
+      'dateOfUnemployment' : dateOfUnemployment != null ? dateOfUnemployment.toIso8601String() : '',
+      'dateOfWorkpermit' : dateOfWorkpermit != null ? dateOfWorkpermit.toIso8601String() : '',
     };
   }
 
@@ -77,6 +85,6 @@ class Application {
 
   @override
   String toString() {
-    return 'Application{id: $id, employerId: $employerId, email: $email, phone: $phone, firstName: $firstName, lastName: $lastName, birthDate: $birthDate, ahv: $ahv, address: $address, zipCode: $zipCode, city: $city, citizenship: $citizenship}';
+    return 'Application{id: $id, employerId: $employerId, email: $email, phone: $phone, firstName: $firstName, lastName: $lastName, birthDate: $birthDate, ahv: $ahv, address: $address, zipCode: $zipCode, city: $city, citizenship: $citizenship, date of unemployment: $dateOfUnemployment, date of workpermit: $dateOfWorkpermit}';
   }
 }

@@ -20,6 +20,25 @@ class RegistrationState extends State<RegistrationOne> {
   @override
   Widget build(BuildContext context) {
     _application = new Application();
+
+
+    _application.employerId = 7;
+    _application.email = 'hans.muster@gmail.com';
+    _application.phone = '0791234567';
+    _application.firstName = 'Hans';
+    _application.lastName = 'Muster';
+    _application.birthDate = new DateTime(1990,5,23);
+    _application.ahv = '756.3493.5021.14';
+    _application.address = 'Bahnhofplatz 15';
+    _application.zipCode = 4000;
+    _application.city = 'Basel';
+    _application.citizenship = 'CH';
+    _application.gender = 'male';
+    _application.dateOfUnemployment = new DateTime(2019, 05, 20);
+
+    debugPrint(applicationToJson(_application));
+
+
     return Scaffold(
         appBar: AppBar(
           title: Text(AppTranslations.of(context).text('tab_registration')),

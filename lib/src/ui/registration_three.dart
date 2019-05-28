@@ -1,3 +1,4 @@
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:digibp_appenzell/src/blocs/EmployerListBloc.dart';
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
 import 'package:digibp_appenzell/src/models/ApplicationModel.dart';
@@ -5,6 +6,8 @@ import 'package:digibp_appenzell/src/models/EmployerModel.dart';
 import 'package:digibp_appenzell/src/ui/registration_four.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
+
+import 'package:intl/intl.dart';
 
 class RegistrationThree extends StatefulWidget {
   Application _application;
@@ -23,7 +26,14 @@ class RegistrationState extends State<RegistrationThree> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   Application _application;
+
   Employer _selected;
+  DateTime _workpermitDate;
+  DateTime _unemploymentDate;
+
+  final FocusNode _workpermitDateFocus = FocusNode();
+  final FocusNode _unemploymentDateFocus = FocusNode();
+  final FocusNode _employerSelectionFocus = FocusNode();
 
   RegistrationState(Application application) {
     _application = application;
@@ -109,7 +119,7 @@ class RegistrationState extends State<RegistrationThree> {
               ),
               new Step(
                 title: Text(AppTranslations.of(context).text('txt_step3')),
-                content: buildAutoTextView(),
+                content: generateForm(),
                 isActive: true,
                 state: StepState.editing,
                 subtitle: Text(AppTranslations.of(context).text('txt_case_information')),
@@ -160,6 +170,50 @@ class RegistrationState extends State<RegistrationThree> {
     );
   }
 
+  generateForm() {
+    List<Widget> forms = new List();
+
+    forms.add(buildAutoTextView());
+
+    forms.add(new ListTile(
+        leading: const Icon(Icons.date_range),
+        title: DateTimePickerFormField(
+          inputType: InputType.date,
+          format: DateFormat('yyyy-MM-dd'),
+          editable: true,
+          focusNode: _unemploymentDateFocus,
+          onFieldSubmitted: (term) {
+            _application.citizenship != 'CH' ?
+            _fieldFocusChange(context, _unemploymentDateFocus, _workpermitDateFocus) : true;
+          },
+          initialDate: new DateTime(2019),
+          decoration: InputDecoration(
+              labelText: AppTranslations.of(context).text('lbl_unemployment'), hasFloatingPlaceholder: false),
+          validator: validateBirthDate,
+          onSaved: (DateTime val) {
+            _unemploymentDate = val;
+          },
+        )));
+
+    if (_application.citizenship != 'CH') {
+      forms.add(new ListTile(
+          leading: const Icon(Icons.date_range),
+          title: DateTimePickerFormField(
+            inputType: InputType.date,
+            format: DateFormat('yyyy-MM-dd'),
+            editable: true,
+            focusNode: _workpermitDateFocus,
+            initialDate: new DateTime(2019),
+            decoration: InputDecoration(
+                labelText: AppTranslations.of(context).text('lbl_workpermit'), hasFloatingPlaceholder: false),
+            validator: validateBirthDate,
+            onSaved: (DateTime val) {
+              _workpermitDate = val;
+            },
+          )));
+    }
+  }
+
   buildAutoTextView() {
     return StreamBuilder(
         stream: bloc.allEmployers,
@@ -187,11 +241,22 @@ class RegistrationState extends State<RegistrationThree> {
     );
   }
 
+  void _fieldFocusChange(context, FocusNode currentFocus, FocusNode nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
+
+  String validateBirthDate(DateTime value) {
+    return null;
+  }
+
   void _validateInputs() {
     if (_selected != null) {
       // If all data are correct then save data to out variables
       _formKey.currentState.save();
       _application.employerId = _selected.id;
+      _application.dateOfUnemployment = _unemploymentDate;
+      _application.dateOfWorkpermit = _workpermitDate;
       debugPrint('Move To Reg 4 : ${_selected.id}');
       debugPrint('Validation OK: $_application');
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
