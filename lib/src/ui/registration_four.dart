@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:digibp_appenzell/src/localisation/app_translation.dart';
 import 'package:digibp_appenzell/src/models/ApplicationModel.dart';
+import 'package:digibp_appenzell/src/ui/home.dart';
+import 'package:digibp_appenzell/src/blocs/SubmitApplicationBloc.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -107,9 +109,11 @@ class RegistrationState extends State<RegistrationFour> {
 
   _generateCaptcha() {
     for (String eye in eyes) {
-      resultMap[eye] = (statuses..shuffle()).first;
+      resultMap[eye] = 'closed';
+      //resultMap[eye] = (statuses..shuffle()).first;
     }
-    resultMap['smile'] = (smiles..shuffle()).first;
+    resultMap['smile'] = false;
+    //resultMap['smile'] = (smiles..shuffle()).first;
   }
 
   Widget _displayCaptcha() {
@@ -231,6 +235,32 @@ class RegistrationState extends State<RegistrationFour> {
         timeInSecForIos: 3,
         backgroundColor: Colors.grey,
         textColor: Colors.white);
+
+    if (validLeft && validRight && validSmile) {
+      bloc.insertCase(_application).then((success) {
+        debugPrint('Application Submitted: $success');
+        if(success) {
+          Fluttertoast.showToast(
+              msg: AppTranslations.of(context).text('txt_application_created'),
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 5,
+              backgroundColor: Colors.grey,
+              textColor: Colors.white);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return Home();
+          }));
+        } else {
+          Fluttertoast.showToast(
+              msg: AppTranslations.of(context).text('txt_application_error'),
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 5,
+              backgroundColor: Colors.grey,
+              textColor: Colors.white);
+        }
+      });
+    }
   }
 
   void _checkData(List<Face> faceList) {

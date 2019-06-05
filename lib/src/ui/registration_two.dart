@@ -304,7 +304,7 @@ class RegistrationState extends State<RegistrationTwo> {
         leading: const Icon(Icons.flag),
         title: new CountryCodePicker(
           onChanged: (countryCode) {
-            _citizenship = countryCode.toString();
+            _citizenship = countryCode.code;
           },
           initialSelection: 'CH',
           showCountryOnly: true,

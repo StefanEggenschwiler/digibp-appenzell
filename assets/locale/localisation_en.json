@@ -53,8 +53,8 @@
   "lbl_ssn": "Swiss SSN Number",
   "lbl_case_id": "Application ID",
   "lbl_search_case": "Search",
-  "lbl_workpermit": "Workpermit Expiration Date",
-  "lbl_unemployment": "Date of Unemployment",
+  "lbl_workpermit": "Permit Expiration",
+  "lbl_unemployment": "Unemployment Date",
   "lbl_submit_case": "Submit Case",
   "txt_employer_selection": "WOAH!!!! Welcome to the employer selection page! \tლ(=ↀωↀ=)ლ"
 }

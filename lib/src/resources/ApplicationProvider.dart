@@ -8,18 +8,18 @@ import 'dart:convert';
 
 class ApplicationProvider {
 
-  final String employersWebHook = 'https://hook.integromat.com/i9d781qy7edvanqliibdsw6fmo28gu1y';
-  final String usersWebHook = 'https://hook.integromat.com/0qe68l3pwn3fx8avu7hiwpijlxesn7un';
-  final String caseWebHook = 'https://hook.integromat.com/5ikusfdktgtr8laljodbg3jx5l1ug36m';
-  final String statusWebHook = 'https://hook.integromat.com/5ikusfdktgtr8laljodbg3jx5l1ug36m';
+  final String employersWebHook = 'https://hook.integromat.com/p6io8rlt74f985ua8lt5noz13m3vme9c';
+  final String getUserWebHook = 'https://hook.integromat.com/svjkbe2bprdrvyv2nufq8h09tbcy52wx';
+  final String usersWebHook = 'https://hook.integromat.com/fge8fo81uqqvkynrfyn17kt89nzlrtg6';
+  final String caseWebHook = 'https://hook.integromat.com/h1cq9xlo7acde00o5ki7h1ft6bb94y7l';
+  final String statusWebHook = 'https://hook.integromat.com/mim5396ufu7uttsdvib2dj1b44io1uun';
 
   ApplicationProvider._();
 
   static final ApplicationProvider api = ApplicationProvider._();
 
   Future<int> insertUpdateUser(Application application) async {
-    var response = await http.post(
-        'https://hook.integromat.com/zjfesnrdov34htafsfecg6xy14d7ch7c',
+    var response = await http.post(usersWebHook,
         body: applicationToJson(application),
         headers: {'Content-type': 'application/json'}
         );
@@ -43,7 +43,7 @@ class ApplicationProvider {
 
   Future<AppStatus> getStatus(int applicationId) async {
     debugPrint(appStatusToJson(new AppStatus(id: applicationId)));
-    var response = await http.post('https://hook.integromat.com/mim5396ufu7uttsdvib2dj1b44io1uun',
+    var response = await http.post(statusWebHook,
         body: appStatusToJson(new AppStatus(id: applicationId)),
         headers: {'Content-type': 'application/json'}
         );
@@ -65,8 +65,7 @@ class ApplicationProvider {
     Application application = new Application(ahv: ahv);
     debugPrint(applicationToJson(application));
 
-    var response = await http.post(
-        'https://hook.integromat.com/k3fr1hnu6l4jylaoe8hbj5af1luyudng',
+    var response = await http.post(getUserWebHook,
         body: applicationToJson(application),
         headers: {'Content-type': 'application/json'}
     );

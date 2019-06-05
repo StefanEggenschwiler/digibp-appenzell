@@ -24,16 +24,16 @@ class Employer {
 
   Map<String, dynamic> toMap() {
     return {
-      'id' : id,
-      'name' : name,
-      'email' : email
+      'id_employer' : id,
+      'emp_name' : name,
+      'emp_email' : email
     };
   }
 
   factory Employer.fromMap(Map<dynamic, dynamic> V) => new Employer(
-      id: V['id'],
-      name: V['name'],
-      email: V['email']
+      id: V['id_employer'],
+      name: V['emp_name'],
+      email: V['emp_email']
   );
 
   @override

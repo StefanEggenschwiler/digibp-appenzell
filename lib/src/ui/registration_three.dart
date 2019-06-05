@@ -119,7 +119,9 @@ class RegistrationState extends State<RegistrationThree> {
               ),
               new Step(
                 title: Text(AppTranslations.of(context).text('txt_step3')),
-                content: generateForm(),
+                content: new Column(
+                  children: generateForm(),
+                ),
                 isActive: true,
                 state: StepState.editing,
                 subtitle: Text(AppTranslations.of(context).text('txt_case_information')),
@@ -196,6 +198,8 @@ class RegistrationState extends State<RegistrationThree> {
         )));
 
     if (_application.citizenship != 'CH') {
+      debugPrint('CITIZENSHIP NOT CH! ' + _application.citizenship);
+      debugPrint(_application.toString());
       forms.add(new ListTile(
           leading: const Icon(Icons.date_range),
           title: DateTimePickerFormField(
@@ -212,6 +216,7 @@ class RegistrationState extends State<RegistrationThree> {
             },
           )));
     }
+    return forms;
   }
 
   buildAutoTextView() {
@@ -219,6 +224,7 @@ class RegistrationState extends State<RegistrationThree> {
         stream: bloc.allEmployers,
         builder: (BuildContext context, AsyncSnapshot<List<Employer>> snapshot) {
           if (snapshot.hasData) {
+            debugPrint(snapshot.data.toString());
             return new DropdownButton<Employer>(
               value: _selected,
               items: snapshot.data.map<DropdownMenuItem<Employer>>((Employer value) {
