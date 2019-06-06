@@ -109,11 +109,9 @@ class RegistrationState extends State<RegistrationFour> {
 
   _generateCaptcha() {
     for (String eye in eyes) {
-      resultMap[eye] = 'closed';
-      //resultMap[eye] = (statuses..shuffle()).first;
+      resultMap[eye] = (statuses..shuffle()).first;
     }
-    resultMap['smile'] = false;
-    //resultMap['smile'] = (smiles..shuffle()).first;
+    resultMap['smile'] = (smiles..shuffle()).first;
   }
 
   Widget _displayCaptcha() {
